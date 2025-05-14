@@ -17,6 +17,12 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
     console.log("Client connected");
+
+    socket.on('ping', () => {
+        console.log('PING')
+        socket.emit('pong');
+        console.log('PONG')
+    })
 })
 
 httpServer.listen(PORT, () => {
