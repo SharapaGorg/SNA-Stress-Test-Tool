@@ -12,7 +12,7 @@ const startAttack = () => {
   const startTime = Date.now();
 
   const sendRequest = async (proxy, userAgent) => {
-    console.log('PROXY:', proxy);
+    // console.log('PROXY:', proxy);
 
     try {
       const client = createMimicHttpClient(proxy, userAgent);

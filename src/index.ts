@@ -7,5 +7,5 @@ socket.on('pong', () => {
 })
 
 setTimeout(() => {
-    socket.emit('ping');
+    socket.emit('startAttack');
 }, 1000)
