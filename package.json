@@ -1,12 +1,19 @@
 {
   "name": "SNA-Stress-Test-Tool",
   "scripts": {
-    "watch": "nodemon --watch server --ext ts --exec ts-node server/index.ts"
+    "watch": "nodemon --watch server --ext ts --exec ts-node server/index.ts",
+    "test-watch": "nodemon --watch server --ext ts --exec ts-node src/index.ts"
   },
   "packageManager": "yarn@4.5.2",
   "devDependencies": {
+    "@types/express": "^5.0.1",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   }
 }
