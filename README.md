@@ -37,3 +37,15 @@ The tool is designed to simulate various types of network attacks, providing sys
 - **Documentation**
     - Prepare detailed setup instructions and user documentation.
     - Include links to source code repositories, configuration files, and usage examples for reproducibility and transparency.
+
+### Architecture Overview
+
+The solution consists of two main components:
+
+- **Backend (attack generator)**:  
+  A Node.js (TypeScript) server responsible for creating high network load using a pool of workers. Each worker acts as an independent client, generating and sending requests to the chosen target. Workers are controlled by the main process via sockets for real-time coordination and parameter update.
+
+- **Frontend (control panel)**:  
+  A React web application that communicates with the backend both through sockets (for receiving real-time attack statistics and status updates) and REST API (for configuration and triggering attacks). The frontend visualizes current load, target status, and historical test data, enabling easy and transparent management.
+
+![img.png](public/architecture.png)
