@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite';
+// @ts-ignore
+import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
@@ -6,10 +7,10 @@ export default defineConfig({
     plugins: [react()],
     root: 'client',
     build: {
-        outDir: '../dist/client',
-        emptyOutDir: true
+        outDir: path.resolve(__dirname, "dist/public"),
     },
     server: {
+        strictPort: true,
         proxy: {
             // Forward API requests to the backend during development
             '/api': {

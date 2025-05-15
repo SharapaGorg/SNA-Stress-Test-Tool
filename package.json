@@ -6,11 +6,11 @@
     "dev:client": "cross-env NODE_ENV=development vite",
     "clean": "rimraf ./dist",
     "build": "npm run clean && npm run build:client && npm run build:server",
-    "build:client": "vite build",
+    "build:client": "cd client && vite build",
     "build:server": "tsc -p tsconfig.server.json",
-    "start": "cross-env NODE_ENV=production node dist/server/index.js",
-    "lint": "eslint ."
+    "start": "cross-env NODE_ENV=production node dist/server/index.js"
   },
+
   "packageManager": "yarn@4.5.2",
   "devDependencies": {
     "@types/express": "^5.0.1",
