@@ -1,19 +1,43 @@
-import { useState } from 'react';
+import {useState} from 'react';
+
+
+function StartAttackButton() {
+    return (
+        <button className="start-attack-button">
+            Start attack
+        </button>
+    )
+}
+
+function TextField(props: {
+    placeholder: string,
+    value: string,
+    onChange?: any
+}) {
+    return (
+        <input
+            className='text-field'
+            placeholder={props.placeholder}
+            value={props.value}
+            onChange={e => props.onChange(e.target.value)}
+        />
+    )
+}
 
 function App() {
-    const [count, setCount] = useState(0);
+    const [target, setTarget] = useState('');
 
     return (
         <div className="control-panel-container">
-            <header>
-                <h1>SNA Stress Test Tool</h1>
-            </header>
-            <main>
-                <p>Welcome to the Stress Test Tool!</p>
-                <button onClick={() => setCount((count) => count + 1)}>
-                    Count is: {count}
-                </button>
-            </main>
+            <div className="header">Stress-Test Control Panel</div>
+
+            <TextField
+                placeholder="Enter target URL"
+                value={target}
+                onChange={setTarget}
+            />
+
+            <StartAttackButton/>
         </div>
     );
 }
