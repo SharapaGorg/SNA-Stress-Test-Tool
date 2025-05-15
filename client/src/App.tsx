@@ -4,7 +4,7 @@ function App() {
     const [count, setCount] = useState(0);
 
     return (
-        <div className="App">
+        <div className="control-panel-container">
             <header>
                 <h1>SNA Stress Test Tool</h1>
             </header>
