@@ -1,26 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    // Modern output (change to ES6, ES2015, etc. if needed)
-    "module": "commonjs",
-    "moduleResolution": "node",
-    // Standard for Node.js; use "ESNext" for ESM
-    "outDir": "dist",
-    // Output directory for compiled JS
-    "rootDir": "server",
-    // Source files directory
-    "strict": true,
-    // Enables all strict type checks
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
-    // For default import compatibility with CommonJS modules
-    "forceConsistentCasingInFileNames": true,
-    // Avoid case-related import bugs
+    "strict": true,
     "skipLibCheck": true,
-    // Speeds up typechecking by skipping `node_modules`
-    "declaration": true,
-    // Generate `.d.ts` files for your modules
-    "sourceMap": true
-    // Generate `.js.map` files for debugging
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "server"

