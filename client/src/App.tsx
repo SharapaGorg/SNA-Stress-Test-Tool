@@ -1,27 +1,20 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
+import {io} from "socket.io-client";
+import {StartAttackButton, TextField} from "./components";
 
+const SOCKET_URL = "http://localhost:3000";
 
-function StartAttackButton() {
-    return (
-        <button className="start-attack-button">
-            Start attack
-        </button>
-    )
-}
+const socket = io(SOCKET_URL);
 
-function TextField(props: {
-    placeholder: string,
-    value: string,
-    onChange?: any
-}) {
-    return (
-        <input
-            className='text-field'
-            placeholder={props.placeholder}
-            value={props.value}
-            onChange={e => props.onChange(e.target.value)}
-        />
-    )
+const startAttack = (target: string) => {
+    if (!target.trim()) {
+        alert("Please enter a target!");
+        return;
+    }
+
+    socket.emit('startAttack', {
+        target
+    })
 }
 
 function App() {
@@ -37,7 +30,9 @@ function App() {
                 onChange={setTarget}
             />
 
-            <StartAttackButton/>
+            <StartAttackButton onClick={() => {
+                startAttack(target)
+            }}/>
         </div>
     );
 }

