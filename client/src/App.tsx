@@ -6,15 +6,8 @@ const SOCKET_URL = "http://localhost:3000";
 
 const socket = io(SOCKET_URL);
 
-const startAttack = (target: string) => {
-    if (!target.trim()) {
-        alert("Please enter a target!");
-        return;
-    }
-
-    socket.emit('startAttack', {
-        target
-    })
+const stopAttack = () => {
+    socket.emit('stopAttack');
 }
 
 type Stats = {
@@ -25,6 +18,7 @@ type Stats = {
 function App() {
     const [target, setTarget] = useState('');
     const [logs, setLogs] = useState([]);
+    const [isAttacking, setIsAttacking] = useState(false);
 
     const addLog = (message: string) => {
         setLogs((prev) => [{
@@ -33,18 +27,36 @@ function App() {
         }, ...prev].slice(0, 12));
     };
 
+    const startAttack = (target: string) => {
+        if (!target.trim()) {
+            alert("Please enter a target!");
+            return;
+        }
+
+        setIsAttacking(true);
+
+        socket.emit('startAttack', {
+            target
+        })
+
+    }
+
     useEffect(() => {
-        const handleStats = (data: Stats) => {
+        socket.on('stats', (data: Stats) => {
             console.log('ADD SOME STATS', data);
             addLog(data.log);
-        };
+        });
 
-        socket.on('stats', handleStats);
+        socket.on("attackEnd", () => {
+            setIsAttacking(false);
+        })
 
         return () => {
-            socket.off('stats', handleStats);
+            socket.off('stats');
+            socket.off('attackEnd');
         };
     }, []);
+
 
 
 
@@ -60,9 +72,11 @@ function App() {
 
             <LogsArea logs={logs}/>
 
-            <StartAttackButton onClick={() => {
-                startAttack(target)
-            }}/>
+            <StartAttackButton
+                isAttacking={isAttacking}
+                onClick={() => {
+                    isAttacking ? stopAttack() : startAttack(target);
+                }}/>
         </div>
     );
 }

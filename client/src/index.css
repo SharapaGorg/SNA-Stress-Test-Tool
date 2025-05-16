@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 *::-webkit-scrollbar {
-    width : 0 !important;
+    width: 0 !important;
 }
 
 html {
@@ -24,9 +24,9 @@ body {
 }
 
 .start-attack-button {
-    @apply w-full text-center rounded-lg bg-red-600
+    @apply w-full text-center rounded-lg
     cursor-pointer py-3 font-bold text-white/90
-    shadow-2xl
+    shadow-2xl select-none
 }
 
 
