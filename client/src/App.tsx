@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {io} from "socket.io-client";
-import {StartAttackButton, TextField} from "./components";
+import {StartAttackButton, TextField, LogsArea} from "./components";
 
 const SOCKET_URL = "http://localhost:3000";
 
@@ -17,8 +17,36 @@ const startAttack = (target: string) => {
     })
 }
 
+type Stats = {
+    log: string,
+    bots: number
+}
+
 function App() {
     const [target, setTarget] = useState('');
+    const [logs, setLogs] = useState([]);
+
+    const addLog = (message: string) => {
+        setLogs((prev) => [{
+            level: "info",
+            content: message
+        }, ...prev].slice(0, 12));
+    };
+
+    useEffect(() => {
+        const handleStats = (data: Stats) => {
+            console.log('ADD SOME STATS', data);
+            addLog(data.log);
+        };
+
+        socket.on('stats', handleStats);
+
+        return () => {
+            socket.off('stats', handleStats);
+        };
+    }, []);
+
+
 
     return (
         <div className="control-panel-container">
@@ -29,6 +57,8 @@ function App() {
                 value={target}
                 onChange={setTarget}
             />
+
+            <LogsArea logs={logs}/>
 
             <StartAttackButton onClick={() => {
                 startAttack(target)

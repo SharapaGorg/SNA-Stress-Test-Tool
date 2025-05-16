@@ -1,3 +1,9 @@
+import {useEffect, useRef} from "react";
+
+function randomInteger(min: number = 0, max: number = 1000000) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 export function StartAttackButton({onClick}) {
     return (
         <button className="start-attack-button" onClick={onClick}>
@@ -18,5 +24,42 @@ export function TextField(props: {
             value={props.value}
             onChange={e => props.onChange(e.target.value)}
         />
+    )
+}
+
+export type Log = {
+    datetime?: string,
+    content: string,
+    level: "warning" | "error" | "info" | "debug"
+}
+
+export function LogsArea(props: {
+    logs: Log[]
+}) {
+    const reversedLogs = [...props.logs].reverse();
+    const logsContainerRef = useRef<HTMLDivElement>(null);
+
+    const logsList = reversedLogs.map(log => {
+        return (
+            <div className="log text-green-600" key={randomInteger()}>
+                {">"} {log.content}
+            </div>
+        )
+    })
+
+    useEffect(() => {
+        console.log('LOGS AREA COMPONENT');
+        if (logsContainerRef.current) {
+            logsContainerRef.current.scrollTo({
+                behavior: "smooth",
+                top: logsContainerRef.current.scrollHeight
+            })
+        }
+    })
+
+    return (
+        <div className="logs-area-container" ref={logsContainerRef}>
+            {logsList}
+        </div>
     )
 }

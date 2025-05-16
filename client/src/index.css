@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+*::-webkit-scrollbar {
+    width : 0 !important;
+}
+
 html {
     font-family: "Inter", sans-serif;
 }
@@ -28,4 +32,13 @@ body {
 
 .text-field {
     @apply outline-none pl-5 border-1 py-2 rounded-lg
+}
+
+.logs-area-container {
+    @apply rounded-lg w-full bg-gray-900 p-5
+    max-h-[300px] overflow-y-scroll
+}
+
+.logs-area-container .log {
+    @apply text-green-400
 }
