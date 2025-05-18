@@ -1,23 +1,24 @@
-# File: `Dockerfile`
+# Dockerfile
 FROM node:20-slim
 
+# 1. Set working directory
 WORKDIR /app
 
-# Enable Corepack and pin Yarn
-RUN corepack enable \
- && corepack prepare yarn@4.5.2 --activate
+# 2. Copy only package manifest (and lockfile if you have one already)
+COPY package.json package-lock.json* ./
 
-# Copy package files and install deps from scratch
-COPY package.json yarn.lock ./
-RUN yarn cache clean \
- && yarn install --force --frozen-lockfile
+# 3. Install all dependencies (this will pull in the correct @rollup/linux-arm64 & @esbuild/linux-arm64)
+RUN npm install
 
-# Copy app sources
+# 4. Copy your application source (no host node_modules, thanks to .dockerignore)
 COPY . .
 
-# Expose ports
+# 5. Rebuild any native modules just to be safe
+RUN npm rebuild
+
+# 6. Expose ports & set host
 EXPOSE 3000 5173
 ENV HOST=0.0.0.0
 
-# Start in dev mode
-CMD ["yarn", "dev"]
+# 7. Default command
+CMD ["npm", "run", "dev"]
