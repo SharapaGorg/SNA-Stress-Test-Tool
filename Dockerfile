@@ -17,7 +17,7 @@ COPY . .
 RUN npm rebuild
 
 # 6. Expose ports & set host
-EXPOSE 3000 5173
+EXPOSE 3000
 ENV HOST=0.0.0.0
 
 # 7. Default command
