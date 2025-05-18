@@ -26,10 +26,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Convert image name to lowercase
+      - name: Lowercase image name
+        run: echo "IMAGE_NAME_LOWER=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}
           tags: |
             type=sha,format=short
             type=ref,event=branch
@@ -55,9 +59,13 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v4
+
+      - name: Lowercase image name
+        run: echo "IMAGE_NAME_LOWER=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - run: |
-          # Update image tag in the manifest
-          sed -i "s|image:.*sna-stress-test-tool.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-$(git rev-parse --short HEAD)|g" k8s/deployment.yaml
+          # Update image tag in the manifest with lowercase name
+          sed -i "s|image:.*sna-stress-test-tool.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:sha-$(git rev-parse --short HEAD)|g" k8s/deployment.yaml
 
       - name: Commit and push updated manifests
         run: |
