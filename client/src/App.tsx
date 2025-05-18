@@ -78,10 +78,9 @@ function App() {
                 onChange={setTarget}
             />
 
-            <div className="flex gap-x-2 items-center">
+            <div className="grid grid-cols-2 w-full gap-x-2">
                 <CounterBlock count={totalPackets} header="Packets"/>
                 <CounterBlock header="Proxies" count={activeProxies}/>
-                <CounterBlock header="Attempts" count={10}/>
             </div>
 
             <LogsArea logs={logs}/>
