@@ -21,6 +21,7 @@ function App() {
     const [logs, setLogs] = useState([]);
     const [isAttacking, setIsAttacking] = useState(false);
     const [totalPackets, setTotalPackets] = useState(0);
+    const [activeProxies, setActiveProxies] = useState(0);
 
     const addLog = (message: string) => {
         setLogs((prev) => [{
@@ -49,6 +50,9 @@ function App() {
             if (data.totalPackets) {
                 setTotalPackets(data.totalPackets);
             }
+            if (data.bots) {
+                setActiveProxies(data.bots);
+            }
 
             addLog(data.log);
         });
@@ -74,8 +78,10 @@ function App() {
                 onChange={setTarget}
             />
 
-            <div className="grid grid-cols-2 w-ful gap-x-4">
+            <div className="flex gap-x-2 items-center">
                 <CounterBlock count={totalPackets} header="Packets"/>
+                <CounterBlock header="Proxies" count={activeProxies}/>
+                <CounterBlock header="Attempts" count={10}/>
             </div>
 
             <LogsArea logs={logs}/>

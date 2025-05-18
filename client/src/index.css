@@ -46,7 +46,7 @@ body {
 
 
 .packets-counter-container {
-    @apply rounded-lg border-gray-200 p-10 w-fit
+    @apply rounded-lg border-gray-200 p-9
     shadow-lg bg-gray-900 text-green-400 text-center
 }
 
