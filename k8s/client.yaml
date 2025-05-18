@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: ghcr.io/sharapagorg/sna-stress-test-tool-client:latest
+          image: ghcr.io/SharapaGorg/SNA-Stress-Test-Tool-client:sha-daa5829
           ports:
             - containerPort: 80
           resources:

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: ghcr.io/sharapagorg/sna-stress-test-tool-server:latest
+          image: ghcr.io/SharapaGorg/SNA-Stress-Test-Tool-server:sha-daa5829
           ports:
             - containerPort: 3000
           resources:
