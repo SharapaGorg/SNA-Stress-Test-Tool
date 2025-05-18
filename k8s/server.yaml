@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stress-test-server
+  namespace: stress-test-tool
+  labels:
+    app: stress-test-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stress-test-server
+  template:
+    metadata:
+      labels:
+        app: stress-test-server
+    spec:
+      containers:
+        - name: server
+          image: ghcr.io/sharapagorg/sna-stress-test-tool-server:latest
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stress-test-server
+  namespace: stress-test-tool
+spec:
+  selector:
+    app: stress-test-server
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: ClusterIP
