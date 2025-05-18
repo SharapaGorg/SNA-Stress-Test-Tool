@@ -88,6 +88,9 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
+    permissions:
+      contents: write
+      packages: write
     name: Update Kubernetes manifests
     needs: build
     runs-on: ubuntu-latest
