@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/SharapaGorg/SNA-Stress-Test-Tool:sha-daa5829
+          image: ghcr.io/SharapaGorg/SNA-Stress-Test-Tool:sha-89f4551
           ports:
             - containerPort: 3000
           resources:
