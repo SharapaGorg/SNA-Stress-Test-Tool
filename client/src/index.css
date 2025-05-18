@@ -17,6 +17,7 @@ body {
 .control-panel-container {
     @apply w-[500px] px-7 pt-3 pb-4 bg-white/80 rounded-xl
     shadow-lg text-slate-800 flex flex-col gap-y-4
+    select-none
 }
 
 .control-panel-container .header {
@@ -41,4 +42,14 @@ body {
 
 .logs-area-container .log {
     @apply text-green-400
+}
+
+
+.packets-counter-container {
+    @apply rounded-lg border-gray-200 p-10 w-fit
+    shadow-lg bg-gray-900 text-green-400 text-center
+}
+
+.packets-counter-container .counter-header {
+    @apply text-lg font-bold
 }

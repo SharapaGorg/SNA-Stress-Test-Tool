@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
         const filteredProxies = filterProxies(loadProxies(), AttackMethod.HTTPFlood);
         const userAgents = loadUserAgents();
         const duration = 20;
-        const packetDelay = 1000;
+        const packetDelay = 100;
         const packetSize = 64;
 
         socket.emit("stats", {
@@ -88,6 +88,9 @@ io.on("connection", (socket) => {
         // @ts-ignore
         const worker = socket["worker"];
         if (worker) {
+            socket.emit('stats', {
+                log: "Attack interrupted"
+            })
             worker.terminate();
             socket.emit("attackEnd");
         }

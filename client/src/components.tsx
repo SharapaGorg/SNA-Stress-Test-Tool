@@ -4,6 +4,18 @@ function randomInteger(min: number = 0, max: number = 1000000) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+export function CounterBlock(props: {
+    header: string,
+    count: number
+}) {
+    return (
+        <div className="packets-counter-container">
+            <div className="counter-header">{props.header}</div>
+            <div className="text-2xl">{props.count}</div>
+        </div>
+    )
+}
+
 export function StartAttackButton({onClick, isAttacking}) {
     return (
         <button className={`start-attack-button ${isAttacking ? 'bg-blue-600' : 'bg-red-600'}`} onClick={onClick}>
