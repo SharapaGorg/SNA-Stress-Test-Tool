@@ -8,32 +8,11 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  SERVER_IMAGE_NAME: ${{ github.repository }}-server
-  CLIENT_IMAGE_NAME: ${{ github.repository }}-client
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  lint:
-    name: Lint (simulated)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Simulate linting
-        run: |
-          echo "✅ Linting completed successfully"
-
-  test:
-    name: Test (simulated)
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Simulate testing
-        run: |
-          echo "✅ Testing completed successfully"
-
   build:
-    name: Build and Push Docker Images
-    needs: test
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -47,43 +26,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: meta-server
+      - id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.SERVER_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=sha,format=short
             type=ref,event=branch
             latest
 
-      - id: meta-client
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.CLIENT_IMAGE_NAME }}
-          tags: |
-            type=sha,format=short
-            type=ref,event=branch
-            latest
-
-      - name: Build and push server image
+      - name: Build and push image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./server/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-server.outputs.tags }}
-          labels: ${{ steps.meta-server.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push client image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./client/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-client.outputs.tags }}
-          labels: ${{ steps.meta-client.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -98,9 +56,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          # Update image tags in the manifests
-          sed -i "s|image:.*server:.*|image: ${{ env.REGISTRY }}/${{ env.SERVER_IMAGE_NAME }}:sha-$(git rev-parse --short HEAD)|g" k8s/server.yaml
-          sed -i "s|image:.*client:.*|image: ${{ env.REGISTRY }}/${{ env.CLIENT_IMAGE_NAME }}:sha-$(git rev-parse --short HEAD)|g" k8s/client.yaml
+          # Update image tag in the manifest
+          sed -i "s|image:.*SNA-Stress-Test-Tool.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-$(git rev-parse --short HEAD)|g" k8s/deployment.yaml
 
       - name: Commit and push updated manifests
         run: |

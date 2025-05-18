@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stress-test-app
+  namespace: stress-test-tool
+  labels:
+    app: stress-test-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stress-test-app
+  template:
+    metadata:
+      labels:
+        app: stress-test-app
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/SharapaGorg/SNA-Stress-Test-Tool:sha-daa5829
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
