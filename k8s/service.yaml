@@ -7,6 +7,10 @@ spec:
   selector:
     app: stress-test-app
   ports:
-    - port: 3000
+    - name: backend
+      port: 3000
       targetPort: 3000
+    - name: frontend
+      port: 5173
+      targetPort: 5173
   type: ClusterIP
