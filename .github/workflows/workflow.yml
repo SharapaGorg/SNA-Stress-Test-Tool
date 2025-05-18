@@ -57,7 +57,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           # Update image tag in the manifest
-          sed -i "s|image:.*SNA-Stress-Test-Tool.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-$(git rev-parse --short HEAD)|g" k8s/deployment.yaml
+          sed -i "s|image:.*sna-stress-test-tool.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-$(git rev-parse --short HEAD)|g" k8s/deployment.yaml
 
       - name: Commit and push updated manifests
         run: |
